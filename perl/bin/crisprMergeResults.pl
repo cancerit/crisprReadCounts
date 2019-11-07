@@ -49,14 +49,13 @@ sub run {
 
 	my ($samp_name, $plas_name, $sample, $plasmid, $targeted_genes) = get_sample_read_counts($options);
 
-
 	my %genes = %$targeted_genes;
-    my %plasmid_rc = %$plasmid if($has_plasmid && $has_plasmid != m/NA/i);
+    my %plasmid_rc = %$plasmid if($has_plasmid && $has_plasmid ne 'NA');
 	my %sample_rc = %$sample;
 
 	open my $OUT, '>', $options->{'o'} or die 'Failed to open '.$options->{'o'};
 
-	if($has_plasmid && $has_plasmid != m/NA/i){
+	if($has_plasmid && $has_plasmid ne 'NA'){
 		print $OUT "sgRNA\tgene\t".$samp_name."\t".$plas_name."\n";
 
 		foreach my $id(keys %sample_rc){
@@ -125,7 +124,7 @@ sub option_builder {
 		'h|help'      => \$opts{'h'},
 		'o|output=s'  => \$opts{'o'},
 		'i|input=s'   => \$opts{'i'},
-        'i|plasmid=s' => \$opts{'p'},
+        'p|plasmid=s' => \$opts{'p'},
         'v|version'   => \$opts{'v'});
 
     if ($opts{'v'}) {

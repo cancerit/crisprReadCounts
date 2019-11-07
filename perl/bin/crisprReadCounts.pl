@@ -56,11 +56,7 @@ sub run {
 	$trim = $options->{'t'};
 	($lib_seqs, $targeted_genes, $lib_seq_size) = get_library($options->{'l'});
 
-    if($options->{'pd'}){
-	  ($plasmid, $plas_name) = get_counts($options->{'pd'}, $lib_seqs, $targeted_genes, $trim, $lib_seq_size);
-    }else{
-      ($plasmid, $plas_name) = get_plasmid_read_counts($options->{'p'});
-    }
+    ($plasmid, $plas_name) = get_plasmid_read_counts($options->{'p'});
 
 	$plas_name = $plas_name.".sample";
 
@@ -69,7 +65,7 @@ sub run {
 	my %genes = %$targeted_genes;
     my %plasmid_rc = %$plasmid if($plas_name);
 
-	my ($seen_samp, $samp_name) = get_counts($options->{'d'}, $lib_seqs, $targeted_genes, $trim, $lib_seq_size);
+	my ($seen_samp, $samp_name) = get_counts($options->{'i'}, $lib_seqs, $targeted_genes, $trim, $lib_seq_size);
 
 	my %sample = %$seen_samp;
 
@@ -153,11 +149,11 @@ sub get_plasmid_read_counts {
 
   		close $RC;
 	}
-	return ($plasmid_name, \%plasmid);
+	return (\%plasmid, $plasmid_name);
 }
 
 sub get_counts {
-  	my ($dir, $lib, $genes, $trim, $lib_seq_size) = @_;
+  	my ($file, $lib, $genes, $trim, $lib_seq_size) = @_;
 
 	my %seen;
 	my %bam_seqs;
@@ -165,57 +161,51 @@ sub get_counts {
 	my %lib_seqs = %$lib;
 	my %targeted_genes = %$genes;
 
-	opendir(DIR, $dir) or die "cannot open directory";
-	my @docs = grep(/\.cram$/,readdir(DIR));
-	foreach my $file (@docs) {
-		$file = $dir.$file;
+	my $head_command = q{scramble -I cram -O bam }.$file.q{ | samtools view -H - | grep -e '^@RG'};
+	my $pid_head = open my $PROC_HEAD, '-|', $head_command or croak "Could not fork: $OS_ERROR";
+	while( my $tmp = <$PROC_HEAD> ) {
+		my @head = split /\t+/, $tmp;
+		foreach my $val(@head){
+			if($val =~ m/^SM/i){
+				my($sm, $sample) = split /\:/, $val;
+				$sample_name = $sample;
+				}
+		}
+	}
 
-		#my $command = 'samtools view '.$options->{'i'};
-		my $head_command = q{scramble -I cram -O bam }.$file.q{ | samtools view -H - | grep -e '^@RG'};
-		my $pid_head = open my $PROC_HEAD, '-|', $head_command or croak "Could not fork: $OS_ERROR";
-		while( my $tmp = <$PROC_HEAD> ) {
-			my @head = split /\t+/, $tmp;
-			foreach my $val(@head){
-				if($val =~ m/^SM/i){
-					my($sm, $sample) = split /\:/, $val;
-					$sample_name = $sample;
-					}
-			}
+	my $command = 'scramble -I cram -O bam '.$file.' | samtools view -';
+	my $pid = open my $PROC, '-|', $command or croak "Could not fork: $OS_ERROR";
+
+	my $start=0;
+	my $stop=0;
+	my $length=0;
+	my $match_seq=0;
+
+	while( my $tmp = <$PROC> ) {
+		chomp($tmp);
+		my @data = split /\t/, $tmp;
+		my $cram_seq = $data[9];
+		my $cram_seq_size = length($cram_seq);
+	 
+		if($data[1] % 32 >= 16){
+			my $revcomp = reverse($cram_seq);
+			$revcomp =~ tr/ACGTacgt/TGCAtgca/;
+			$cram_seq = $revcomp;
 		}
 
-		my $command = 'scramble -I cram -O bam '.$file.' | samtools view -';
-  		my $pid = open my $PROC, '-|', $command or croak "Could not fork: $OS_ERROR";
+		if($trim && $trim>0){
+			$cram_seq = substr $cram_seq, $trim, $lib_seq_size;
+		}
 
-		my $start=0;
-		my $stop=0;
-		my $length=0;
-		my $match_seq=0;
+		foreach my $grna (@{$lib_seqs{$cram_seq}}) {
+			$seen{$grna}++;
+			$match_seq++;
+		}
 
-  		while( my $tmp = <$PROC> ) {
-  			chomp($tmp);
-  			my @data = split /\t/, $tmp;
- 			my $cram_seq = $data[9];
-            my $cram_seq_size = length($cram_seq);
-		 
-			if($data[1] % 32 >= 16){
- 				my $revcomp = reverse($cram_seq);
-   				$revcomp =~ tr/ACGTacgt/TGCAtgca/;
-   				$cram_seq = $revcomp;
- 			}
-
-			if($trim && $trim>0){
-				$cram_seq = substr $cram_seq, $trim, $lib_seq_size;
-			}
-
-			foreach my $grna (@{$lib_seqs{$cram_seq}}) {
-				$seen{$grna}++;
-				$match_seq++;
-			}
-
-  		}
+	}
 
 	close $PROC;
-	}
+
 
 	return (\%seen, $sample_name);
 }
@@ -228,9 +218,8 @@ sub option_builder {
 
 	my $result = &GetOptions (
 		'h|help' => \$opts{'h'},
-		'd|dir=s' => \$opts{'d'},
+		'i|dir=s' => \$opts{'i'},
 		'p|plas=s' => \$opts{'p'},
-        'pd|plasdir' => \$opts{'pd'},
 		'o|output=s' => \$opts{'o'},
 		'l|library=s' => \$opts{'l'},
  		't|trim=s' => \$opts{'t'},
@@ -243,8 +232,8 @@ sub option_builder {
 
    	pod2usage() if($opts{'h'});
 	pod2usage(1) if(!$opts{'o'});
-	pod2usage(q{(-d), (-l) and (-o) must be defined}) unless($opts{'d'}&&$opts{'l'}&&$opts{'o'});
-    pod2usage(q{(-p) or (-pd) must be defined}) unless($opts{'pd'}||$opts{'p'});
+	pod2usage(q{(-i), (-l) and (-o) must be defined}) unless($opts{'i'}&&$opts{'l'}&&$opts{'o'});
+    pod2usage(q{(-p) must be defined}) unless($opts{'p'});
 
 	return \%opts;
 }
@@ -257,15 +246,13 @@ crisprReadCounts.pl - counts reads in cram files
 
 =head1 SYNOPSIS
 
-crisprReadCounts.pl [-h] -d /your/input/directory/ -l /your/library/file -p /plasmid/readcount/directory/ -o output_file
+crisprReadCounts.pl [-h] -i /your/input/file.cram -l /your/library/file -p /plasmid/readcount/file -o output_file
 
   General Options:
 
 	--help      (-h)	Brief documentation
 	
-	--dir       (-d)	Directory of sample cram files
-	
-	--plasdir   (-pd)	Plasmid cram file directory
+	--dir       (-i)	Input sample cram file
 
     --plas   (-p)	Plasmid count tsv file
 	
