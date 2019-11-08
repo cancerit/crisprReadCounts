@@ -91,7 +91,11 @@ sub get_sample_read_counts {
 	foreach my $file(@files){
 		print "$file\n";
 		my $FH;
-		open $FH, "gunzip -c $file|" or croak "$OS_ERROR\n\t Occurred when opening gzipped $file\n";
+		if($file =~ m/\.gz/i){
+			open $FH, "gunzip -c $file|" or croak "$OS_ERROR\n\t Occurred when opening gzipped $file\n";
+		}else{
+			open $FH, '<', $file or die 'Failed to open '.$file;
+		}
 		while(<$FH>){
 			my $line = $_;
 			chomp $line;
