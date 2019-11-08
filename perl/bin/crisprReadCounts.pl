@@ -58,9 +58,6 @@ sub run {
 
     ($plasmid, $plas_name) = get_plasmid_read_counts($options->{'p'});
 
-	$plas_name = $plas_name.".sample";
-
-
 	my %lib = %$lib_seqs;
 	my %genes = %$targeted_genes;
     my %plasmid_rc = %$plasmid if($plas_name);
