@@ -21,6 +21,15 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 ##########LICENCE##########
 
+get_file () {
+# output, source
+  if hash curl 2>/dev/null; then
+    curl --insecure -sS -o $1 -L $2
+  else
+    wget -nv -O $1 $2
+  fi
+}
+
 set -xe
 
 if [[ -z "${TMPDIR}" ]]; then
