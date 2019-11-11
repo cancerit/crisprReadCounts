@@ -48,32 +48,42 @@ echo $INST_PATH
 # get current directory
 INIT_DIR=`pwd`
 
+#create a location to build dependencies
 SETUP_DIR=$INIT_DIR/install_tmp
-mkdir -p $INST_PATH/bin $SETUP_DIR
+mkdir -p $SETUP_DIR
+
 cd $SETUP_DIR
 
-# make sure tools installed can see the install loc of libraries
-set +u
-export LD_LIBRARY_PATH=`echo $INST_PATH/lib:$LD_LIBRARY_PATH | perl -pe 's/:\$//;'`
-export PATH=`echo $INST_PATH/bin:$BB_INST/bin:$PATH | perl -pe 's/:\$//;'`
-export MANPATH=`echo $INST_PATH/man:$BB_INST/man:$INST_PATH/share/man:$MANPATH | perl -pe 's/:\$//;'`
-export PERL5LIB=`echo $INST_PATH/lib/perl5:$PERL5LIB | perl -pe 's/:\$//;'`
-set -u
-
-# if cpanm is not installed
-if [ -z $(which cpanm) ]; then
-  echo "Can't find cpanm, trying to install.."
-  ## INSTALL CPANMINUS
-  set -eux
-  curl -sSL https://cpanmin.us/ > $SETUP_DIR/cpanm
-  perl $SETUP_DIR/cpanm --no-wget --no-interactive --notest --mirror http://cpan.metacpan.org -l $INST_PATH App::cpanminus
-  rm -f $SETUP_DIR/cpanm
-fi
+## grab cpanm and stick in workspace, then do a self upgrade into bin:
+get_file $SETUP_DIR/cpanm https://cpanmin.us/
+perl $SETUP_DIR/cpanm -l $INST_PATH App::cpanminus
 CPANM=`which cpanm`
 
-# Install sPlot
-$CPANM --no-wget --no-interactive --mirror http://cpan.metacpan.org --notest -l $INST_PATH --installdeps $SCRIPT_PATH/perl/
-$CPANM --no-wget --no-interactive --mirror http://cpan.metacpan.org -l $INST_PATH $SCRIPT_PATH/perl/
+cd $INIT_DIR
 
-cd $HOME
+echo -n "Installing Perl prerequisites ..."
+if ! ( perl -MExtUtils::MakeMaker -e 1 >/dev/null 2>&1); then
+    echo
+    echo "WARNING: Your Perl installation does not seem to include a complete set of core modules.  Attempting to cope with this, but if installation fails please make sure that at least ExtUtils::MakeMaker is installed.  For most users, the best way to do this is to use your system's package manager: apt, yum, fink, homebrew, or similar."
+fi
+
+$CPANM --mirror http://cpan.metacpan.org --notest -l $INST_PATH/ --installdeps . < /dev/null
+
+echo -n "Installing cgpreadcounts ..."
+cd $INIT_DIR
+perl Makefile.PL INSTALL_BASE=$INST_PATH
+make
+make test
+make install
+
+# cleanup all junk
 rm -rf $SETUP_DIR
+
+
+echo
+echo
+echo "Please add the following to beginning of path:"
+echo "  $INST_PATH/bin"
+echo "Please add the following to beginning of PERL5LIB:"
+echo "  $PERLROOT"
+echo
