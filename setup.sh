@@ -30,32 +30,54 @@ get_file () {
   fi
 }
 
-set -xe
-
-if [[ -z "${TMPDIR}" ]]; then
-  TMPDIR=/tmp
+if [[ ($# -ne 1 && $# -ne 2) ]] ; then
+  echo "Please provide an installation path and optionally perl lib paths to allow, e.g."
+  echo "  ./setup.sh /opt/myBundle"
+  echo "OR all elements versioned:"
+  exit 0
 fi
 
-set -u
-
-if [ "$#" -lt "1" ] ; then
-  echo "Please provide an installation path such as /opt/CASM"
-  exit 1
-fi
-
-
-# get path to this script
-SCRIPT_PATH=`dirname $0`;
-SCRIPT_PATH=`(cd $SCRIPT_PATH && pwd)`
-
-# get the location to install to
 INST_PATH=$1
-mkdir -p $1
-INST_PATH=`(cd $1 && pwd)`
-echo $INST_PATH
+
+if [[ $# -eq 2 ]] ; then
+  CGP_PERLLIBS=$2
+fi
+
+CPU=`grep -c ^processor /proc/cpuinfo`
+if [[ $? -eq 0 ]]; then
+  if [[ $CPU -gt 6 ]]; then
+    CPU=6
+  fi
+else
+  CPU=1
+fi
+echo "Max compilation CPUs set to $CPU"
+
+INST_PATH=$1
 
 # get current directory
 INIT_DIR=`pwd`
+
+set -e
+
+# cleanup inst_path
+mkdir -p $INST_PATH/bin
+cd $INST_PATH
+INST_PATH=`pwd`
+cd $INIT_DIR
+
+# make sure that build is self contained
+PERLROOT=$INST_PATH/lib/perl5
+
+# allows user to knowingly specify other PERL5LIB areas.
+if [ -z ${CGP_PERLLIBS+x} ]; then
+  export PERL5LIB="$PERLROOT"
+else
+  export PERL5LIB="$PERLROOT:$CGP_PERLLIBS"
+fi
+
+#add bin path for install tests
+export PATH=$INST_PATH/bin:$PATH
 
 #create a location to build dependencies
 SETUP_DIR=$INIT_DIR/install_tmp
