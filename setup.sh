@@ -88,7 +88,6 @@ fi
 $CPANM -v --mirror http://cpan.metacpan.org --notest -l $INST_PATH/ --installdeps . < /dev/null
 
 echo -n "Installing crisprReadCounts ..."
-get_file share/ascat/ascat.R $ASCAT_SRC
 perl Makefile.PL INSTALL_BASE=$INST_PATH
 make
 make test
