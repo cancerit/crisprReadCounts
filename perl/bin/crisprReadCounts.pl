@@ -220,7 +220,7 @@ sub option_builder {
 		'o|output=s' => \$opts{'o'},
 		'l|library=s' => \$opts{'l'},
  		't|trim=s' => \$opts{'t'},
-        'v|version'   => \$opts{'v'});
+                'v|version'   => \$opts{'v'});
 
     if ($opts{'v'}) {
       print "Version: $VERSION\n";
@@ -251,7 +251,7 @@ crisprReadCounts.pl [-h] -i /your/input/file.cram -l /your/library/file -p /plas
 	
 	--dir       (-i)	Input sample cram file
 
-    --plas   (-p)	Plasmid count tsv file
+        --plas   (-p)	Plasmid count tsv file
 	
 	--library	(-l)	Library csv file
 	

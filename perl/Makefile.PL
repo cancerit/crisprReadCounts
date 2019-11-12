@@ -35,6 +35,8 @@ WriteMakefile(
                      'Try::Tiny' => 0.24,
 		     'Const::Fast' => 0.014,
                      'autodie' => 2.29,
+		     'Pod::Usage' => 1.64,
+		     'Getopt::Long' => 2.45,
 		     'IPC::System::Simple' => 1.25
                    }
 );

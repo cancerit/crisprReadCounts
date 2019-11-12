@@ -39,7 +39,7 @@ my $script_path = "$Bin/../bin";
 #Skip because they have a dependency on canpipe and are not
 #used by canpipe
 #
-use constant COMPILE_SKIP => qw(/vcfToJson.pl bulk_vcfToJson.pl);
+use constant COMPILE_SKIP => qw();
 
 my $perl = $^X;
 

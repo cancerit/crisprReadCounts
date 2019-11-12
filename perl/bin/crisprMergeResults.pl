@@ -32,7 +32,6 @@ use warnings FATAL => 'all';
 
 use Getopt::Long;
 use Pod::Usage qw(pod2usage);
-use Carp;
 use English qw( -no_match_vars );
 
 use Sanger::CGP::crispr;
@@ -128,8 +127,8 @@ sub option_builder {
 		'h|help'      => \$opts{'h'},
 		'o|output=s'  => \$opts{'o'},
 		'i|input=s'   => \$opts{'i'},
-        'p|plasmid=s' => \$opts{'p'},
-        'v|version'   => \$opts{'v'});
+                'p|plasmid=s' => \$opts{'p'},
+                'v|version'   => \$opts{'v'});
 
     if ($opts{'v'}) {
       print "Version: $VERSION\n";
