@@ -230,7 +230,7 @@ sub option_builder {
    	pod2usage() if($opts{'h'});
 	pod2usage(1) if(!$opts{'o'});
 	pod2usage(q{(-i), (-l) and (-o) must be defined}) unless($opts{'i'}&&$opts{'l'}&&$opts{'o'});
-    pod2usage(q{(-p) must be defined}) unless($opts{'p'});
+        pod2usage(q{(-p) must be defined}) unless($opts{'p'});
 
 	return \%opts;
 }
@@ -251,10 +251,10 @@ crisprReadCounts.pl [-h] -i /your/input/file.cram -l /your/library/file -p /plas
 	
 	--dir       (-i)	Input sample cram file
 
-        --plas   (-p)	Plasmid count tsv file
+        --plas      (-p)	Plasmid count tsv file
 	
-	--library	(-l)	Library csv file
+	--library   (-l)	Library csv file
 	
-	--output	(-o)	output file for read counts
+	--output    (-o)	output file for read counts
 
 =cut

@@ -32,6 +32,7 @@ use warnings FATAL => 'all';
 
 use Getopt::Long;
 use Pod::Usage qw(pod2usage);
+use Carp;
 use English qw( -no_match_vars );
 
 use Sanger::CGP::crispr;
