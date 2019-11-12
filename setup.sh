@@ -1,13 +1,13 @@
 #!/bin/bash
 
-##########LICENCE##########
-# Copyright (c) 2019 Genome Research Ltd.
+########## LICENCE ##########
+# Copyright (c) 2014-2019 Genome Research Ltd.
 #
-# Author: Cancer Genome Project cgpit@sanger.ac.uk
+# Author: CASM/Cancer IT <cgphelp@sanger.ac.uk>
 #
-# This file is part of crisprReadCounts.
+# This file is part of AscatNGS.
 #
-# crisprReadCounts is free software: you can redistribute it and/or modify it under
+# AscatNGS is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Affero General Public License as published by the Free
 # Software Foundation; either version 3 of the License, or (at your option) any
 # later version.
@@ -19,61 +19,91 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-##########LICENCE##########
+########## LICENCE ##########
 
-set -xe
+# Update info in README.md if changed
 
-if [[ -z "${TMPDIR}" ]]; then
-  TMPDIR=/tmp
-fi
-
-set -u
-
-if [ "$#" -lt "1" ] ; then
-  echo "Please provide an installation path such as /opt/CASM"
-  exit 1
-fi
+get_file () {
+# output, source
+  if hash curl 2>/dev/null; then
+    curl -sS -o $1 -L $2
+  else
+    wget -nv -O $1 $2
+  fi
+}
 
 
-# get path to this script
-SCRIPT_PATH=`dirname $0`;
-SCRIPT_PATH=`(cd $SCRIPT_PATH && pwd)`
-
-# get the location to install to
 INST_PATH=$1
-mkdir -p $1
-INST_PATH=`(cd $1 && pwd)`
-echo $INST_PATH
+
+if [[ $# -eq 2 ]] ; then
+  CGP_PERLLIBS=$2
+fi
 
 # get current directory
 INIT_DIR=`pwd`
 
+set -eu
+
+# cleanup inst_path
+mkdir -p $INST_PATH/bin
+cd $INST_PATH
+INST_PATH=`pwd`
+cd $INIT_DIR
+
+# make sure that build is self contained
+PERLROOT=$INST_PATH/lib/perl5
+
+# allows user to knowingly specify other PERL5LIB areas.
+if [ -z ${CGP_PERLLIBS+x} ]; then
+  PERL5LIB="$PERLROOT"
+else
+  PERL5LIB="$PERLROOT:$CGP_PERLLIBS"
+fi
+
+export PERL5LIB=$PERL5LIB
+
+#add bin path for install tests
+export PATH=$INST_PATH/bin:$PATH
+
+#create a location to build dependencies
 SETUP_DIR=$INIT_DIR/install_tmp
-mkdir -p $INST_PATH/bin $SETUP_DIR
+mkdir -p $SETUP_DIR
+
 cd $SETUP_DIR
 
-# make sure tools installed can see the install loc of libraries
-set +u
-export LD_LIBRARY_PATH=`echo $INST_PATH/lib:$LD_LIBRARY_PATH | perl -pe 's/:\$//;'`
-export PATH=`echo $INST_PATH/bin:$BB_INST/bin:$PATH | perl -pe 's/:\$//;'`
-export MANPATH=`echo $INST_PATH/man:$BB_INST/man:$INST_PATH/share/man:$MANPATH | perl -pe 's/:\$//;'`
-export PERL5LIB=`echo $INST_PATH/lib/perl5:$PERL5LIB | perl -pe 's/:\$//;'`
-set -u
-
-# if cpanm is not installed
-if [ -z $(which cpanm) ]; then
-  echo "Can't find cpanm, trying to install.."
-  ## INSTALL CPANMINUS
-  set -eux
-  curl -sSL https://cpanmin.us/ > $SETUP_DIR/cpanm
-  perl $SETUP_DIR/cpanm --no-wget --no-interactive --notest --mirror http://cpan.metacpan.org -l $INST_PATH App::cpanminus
-  rm -f $SETUP_DIR/cpanm
-fi
+## grab cpanm and stick in workspace, then do a self upgrade into bin:
+get_file $SETUP_DIR/cpanm https://cpanmin.us/
+perl $SETUP_DIR/cpanm -l $INST_PATH App::cpanminus
 CPANM=`which cpanm`
+echo $CPANM
 
-# Install crisprReadCounts
-$CPANM --no-wget --no-interactive --mirror http://cpan.metacpan.org --notest -l $INST_PATH --installdeps $SCRIPT_PATH/perl/
-$CPANM --no-wget --no-interactive --mirror http://cpan.metacpan.org -l $INST_PATH $SCRIPT_PATH/perl/
+cd $INIT_DIR/perl
 
-cd $HOME
+echo -n "Installing Perl prerequisites ..."
+if ! ( perl -MExtUtils::MakeMaker -e 1 >/dev/null 2>&1); then
+    echo
+    echo "WARNING: Your Perl installation does not seem to include a complete set of core modules.  Attempting to cope with this, but if installation fails please make sure that at least ExtUtils::MakeMaker is installed.  For most users, the best way to do this is to use your system's package manager: apt, yum, fink, homebrew, or similar."
+fi
+
+$CPANM -v --mirror http://cpan.metacpan.org --notest -l $INST_PATH/ --installdeps . < /dev/null
+
+echo -n "Installing crisprReadCounts ..."
+get_file share/ascat/ascat.R $ASCAT_SRC
+perl Makefile.PL INSTALL_BASE=$INST_PATH
+make
+make test
+make install
+rm share/ascat/ascat.R
+
+# cleanup all junk
 rm -rf $SETUP_DIR
+
+echo
+echo
+echo "Please add the following to beginning of path:"
+echo "  $INST_PATH/bin"
+echo "Please add the following to beginning of PERL5LIB:"
+echo "  $PERLROOT"
+echo
+
+exit 0
