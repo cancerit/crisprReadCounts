@@ -30,6 +30,10 @@ ENV LANG en_US.UTF-8
 
 RUN mkdir -p $OPT/bin
 
+# build tools from other repos
+ADD build/opt-build.sh build/
+RUN bash build/opt-build.sh $OPT
+
 # build the tools in this repo, separate to reduce build time on errors
 COPY . .
 RUN bash build/opt-build-local.sh $OPT
@@ -64,9 +68,5 @@ RUN adduser --disabled-password --gecos '' ubuntu && chsh -s /bin/bash && mkdir 
 
 USER    ubuntu
 WORKDIR /home/ubuntu
-
-# build tools from other repos
-ADD build/opt-build.sh build/
-RUN bash build/opt-build.sh $OPT
 
 CMD ["/bin/bash"]
