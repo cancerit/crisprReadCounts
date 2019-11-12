@@ -18,6 +18,7 @@ RUN apt-get install -yq --no-install-recommends\
   apt-transport-https\
   curl\
   libcurl4-gnutls-dev \
+  libncurses5-dev \
   zlib1g-dev \
   libbz2-dev \
   liblzma-dev \
