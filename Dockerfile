@@ -63,4 +63,8 @@ RUN adduser --disabled-password --gecos '' ubuntu && chsh -s /bin/bash && mkdir 
 USER    ubuntu
 WORKDIR /home/ubuntu
 
+# build tools from other repos
+ADD build/opt-build.sh build/
+RUN bash build/opt-build.sh $OPT
+
 CMD ["/bin/bash"]
