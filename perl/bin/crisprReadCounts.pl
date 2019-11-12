@@ -43,7 +43,7 @@ use Sanger::CGP::crispr;
 }
 
 sub run {
-  	my ($options) = @_;
+	my ($options) = @_;
 
 	my $plasmid;
 	my $lib_seqs;
@@ -55,11 +55,11 @@ sub run {
 	$trim = $options->{'t'};
 	($lib_seqs, $targeted_genes, $lib_seq_size) = get_library($options->{'l'});
 
-    ($plasmid, $plas_name) = get_plasmid_read_counts($options->{'p'});
+    	($plasmid, $plas_name) = get_plasmid_read_counts($options->{'p'});
 
 	my %lib = %$lib_seqs;
 	my %genes = %$targeted_genes;
-    my %plasmid_rc = %$plasmid if($plas_name);
+    	my %plasmid_rc = %$plasmid if($plas_name);
 
 	my ($seen_samp, $samp_name) = get_counts($options->{'i'}, $lib_seqs, $targeted_genes, $trim, $lib_seq_size);
 

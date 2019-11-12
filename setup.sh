@@ -92,7 +92,6 @@ perl Makefile.PL INSTALL_BASE=$INST_PATH
 make
 make test
 make install
-rm share/ascat/ascat.R
 
 # cleanup all junk
 rm -rf $SETUP_DIR

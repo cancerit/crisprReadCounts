@@ -9,14 +9,11 @@ ENV LD_LIBRARY_PATH $OPT/lib
 RUN apt-get -yq update
 RUN apt-get install -yq --no-install-recommends\
   locales\
-  libperlio-gzip-perl \
   cpanminus \
   build-essential\
   apt-transport-https\
   curl\
-  ca-certificates\
-  make\
-  gcc
+  ca-certificates
 
 RUN locale-gen en_US.UTF-8
 RUN update-locale LANG=en_US.UTF-8
@@ -37,12 +34,11 @@ FROM  ubuntu:16.04
 
 LABEL maintainer="cgphelp@sanger.ac.uk"\
       uk.ac.sanger.cgp="Cancer, Ageing and Somatic Mutation, Wellcome Sanger Institute" \
-      version="1.2.0" \
+      version="1.1.5" \
       description="crisprReadCounts"
 
 RUN apt-get -yq update
 RUN apt-get install -yq --no-install-recommends \
-libperlio-gzip-perl \
 unattended-upgrades && \
 unattended-upgrade -d -v && \
 apt-get remove -yq unattended-upgrades && \
