@@ -35,6 +35,7 @@ WriteMakefile(
                      'Try::Tiny' => 0.24,
 		     'Const::Fast' => 0.014,
                      'autodie' => 2.29,
+		     'IPC::System::Simple' => 1.25
                    }
 );
 
