@@ -6,6 +6,10 @@ ENV OPT /opt/wtsi-cgp
 ENV PATH $OPT/bin:$PATH
 ENV LD_LIBRARY_PATH $OPT/lib
 
+ENV VER_BIODBHTS="2.10"
+ENV VER_HTSLIB="1.9"
+ENV VER_SAMTOOLS="1.9"
+
 RUN apt-get -yq update
 RUN apt-get install -yq --no-install-recommends\
   locales\
@@ -13,6 +17,7 @@ RUN apt-get install -yq --no-install-recommends\
   build-essential\
   apt-transport-https\
   curl\
+  libcurl4-gnutls-dev \
   ca-certificates
 
 RUN locale-gen en_US.UTF-8
@@ -41,6 +46,7 @@ RUN apt-get -yq update
 RUN apt-get install -yq --no-install-recommends \
 unattended-upgrades && \
 unattended-upgrade -d -v && \
+curl \
 apt-get remove -yq unattended-upgrades && \
 apt-get autoremove -yq
 
