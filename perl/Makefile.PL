@@ -30,4 +30,9 @@ WriteMakefile(
   VERSION_FROM  => 'lib/Sanger/CGP/crispr.pm',
   EXE_FILES     => [qw( bin/crisprReadCounts.pl
                         bin/crisprMergeResults.pl)],
+			
+  PREREQ_PM     => {
+                     'Try::Tiny' => 0.24,
+                   }
 );
+

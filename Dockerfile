@@ -28,8 +28,10 @@ ENV LANG en_US.UTF-8
 
 RUN mkdir -p $OPT/bin
 
+# build the tools in this repo, separate to reduce build time on errors
 COPY . .
-RUN bash setup.sh $OPT
+RUN bash build/opt-build-local.sh $OPT
+
 
 FROM  ubuntu:16.04
 
