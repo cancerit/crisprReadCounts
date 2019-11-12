@@ -34,7 +34,6 @@ use Getopt::Long;
 use Pod::Usage qw(pod2usage);
 use Carp;
 use English qw( -no_match_vars );
-use Readonly qw(Readonly);
 
 use Sanger::CGP::crispr;
 
