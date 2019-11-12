@@ -33,6 +33,7 @@ WriteMakefile(
 			
   PREREQ_PM     => {
                      'Try::Tiny' => 0.24,
+		     'Const::Fast' => 0.014,
                    }
 );
 
