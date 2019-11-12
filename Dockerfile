@@ -18,6 +18,7 @@ RUN apt-get install -yq --no-install-recommends\
   apt-transport-https\
   curl\
   libcurl4-gnutls-dev \
+  zlib1g-dev \
   ca-certificates
 
 RUN locale-gen en_US.UTF-8
