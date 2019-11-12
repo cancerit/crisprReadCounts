@@ -157,7 +157,7 @@ crisprReadCounts.pl [-h] -o /your/output/file -i file1,file2,file3,file4 -p y
 
     --help          (-h)	Brief documentation
 
-	--input	        (-i)	Comma separated list of input files
+    --input	    (-i)	Comma separated list of input files
 
     --output	    (-o)	Output file
 
