@@ -61,7 +61,7 @@ sub run {
 	my %genes = %$targeted_genes;
     	my %plasmid_rc = %$plasmid if($plas_name);
 
-	my ($seen_samp, $samp_name) = get_counts($options->{'i'}, $lib_seqs, $targeted_genes, $trim, $lib_seq_size);
+	my ($seen_samp, $samp_name) = get_counts($options->{'i'}, $options->{'r'},$lib_seqs, $targeted_genes, $trim, $lib_seq_size);
 
 	my %sample = %$seen_samp;
 
@@ -149,7 +149,7 @@ sub get_plasmid_read_counts {
 }
 
 sub get_counts {
-  	my ($file, $lib, $genes, $trim, $lib_seq_size) = @_;
+  	my ($file, $ref_file, $lib, $genes, $trim, $lib_seq_size) = @_;
 
 	my %seen;
 	my %bam_seqs;
@@ -157,7 +157,7 @@ sub get_counts {
 	my %lib_seqs = %$lib;
 	my %targeted_genes = %$genes;
 
-	my $head_command = q{samtools view -H - | grep -e '^@RG'};
+	my $head_command = q{samtools view -H -T} .$ref_file . q{ - | grep -e '^@RG'};
 	my $pid_head = open my $PROC_HEAD, '-|', $head_command or croak "Could not fork: $OS_ERROR";
 	while( my $tmp = <$PROC_HEAD> ) {
 		my @head = split /\t+/, $tmp;
@@ -169,7 +169,7 @@ sub get_counts {
 		}
 	}
 
-	my $command = 'samtools view '.$file;
+	my $command = 'samtools view -T'. $ref_file . ' ' .$file;
 	my $pid = open my $PROC, '-|', $command or croak "Could not fork: $OS_ERROR";
 
 	my $start=0;
@@ -219,6 +219,7 @@ sub option_builder {
 		'o|output=s' => \$opts{'o'},
 		'l|library=s' => \$opts{'l'},
  		't|trim=s' => \$opts{'t'},
+		'r|ref=s' => \$opts{'r'},
                 'v|version'   => \$opts{'v'});
 
     if ($opts{'v'}) {
@@ -228,6 +229,7 @@ sub option_builder {
 
    	pod2usage() if($opts{'h'});
 	pod2usage(1) if(!$opts{'o'});
+	pod2usage(1) if(!$opts{'r'});
 	pod2usage(q{(-i), (-l) and (-o) must be defined}) unless($opts{'i'}&&$opts{'l'}&&$opts{'o'});
         pod2usage(q{(-p) must be defined}) unless($opts{'p'});
 
@@ -255,5 +257,7 @@ crisprReadCounts.pl [-h] -i /your/input/file.cram -l /your/library/file -p /plas
 	--library   (-l)	Library csv file
 	
 	--output    (-o)	output file for read counts
+	
+	--ref       (-r)        genome reference fa file
 
 =cut
