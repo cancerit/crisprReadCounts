@@ -55,6 +55,7 @@ LABEL maintainer="cgphelp@sanger.ac.uk"\
 
 RUN apt-get -yq update
 RUN apt-get install -yq --no-install-recommends \
+curl \
 unattended-upgrades && \
 unattended-upgrade -d -v && \
 curl \
