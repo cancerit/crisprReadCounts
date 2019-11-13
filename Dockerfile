@@ -22,6 +22,7 @@ RUN apt-get install -yq --no-install-recommends\
   zlib1g-dev \
   libbz2-dev \
   liblzma-dev \
+  pkg-config \
   ca-certificates
 
 RUN locale-gen en_US.UTF-8
