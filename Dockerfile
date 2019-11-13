@@ -66,7 +66,6 @@ liblzma5 \
 libncurses5 \
 unattended-upgrades && \
 unattended-upgrade -d -v && \
-curl \
 apt-get remove -yq unattended-upgrades && \
 apt-get autoremove -yq
 
