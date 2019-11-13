@@ -23,9 +23,8 @@ RUN apt-get install -yq --no-install-recommends\
   libbz2-dev \
   liblzma-dev \
   pkg-config \
-  g++ \
-  make \
-  gcc \
+  libgd-dev \
+  libdb-dev \
   ca-certificates
 
 RUN locale-gen en_US.UTF-8
