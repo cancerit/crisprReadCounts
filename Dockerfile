@@ -55,7 +55,15 @@ LABEL maintainer="cgphelp@sanger.ac.uk"\
 
 RUN apt-get -yq update
 RUN apt-get install -yq --no-install-recommends \
+locales \
+libperlio-gzip-perl \
 curl \
+ca-certificates \
+bzip2 \
+time \
+zlib1g \
+liblzma5 \
+libncurses5 \
 unattended-upgrades && \
 unattended-upgrade -d -v && \
 curl \
