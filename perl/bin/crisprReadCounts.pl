@@ -157,7 +157,7 @@ sub get_counts {
 	my %lib_seqs = %$lib;
 	my %targeted_genes = %$genes;
 
-	my $head_command = q{scramble -I cram -O bam }.$file.q{ | samtools view -H - | grep -e '^@RG'};
+	my $head_command = q{samtools view -H - | grep -e '^@RG'};
 	my $pid_head = open my $PROC_HEAD, '-|', $head_command or croak "Could not fork: $OS_ERROR";
 	while( my $tmp = <$PROC_HEAD> ) {
 		my @head = split /\t+/, $tmp;
@@ -169,7 +169,7 @@ sub get_counts {
 		}
 	}
 
-	my $command = 'scramble -I cram -O bam '.$file.' | samtools view -';
+	my $command = 'samtools view '.$file;
 	my $pid = open my $PROC, '-|', $command or croak "Could not fork: $OS_ERROR";
 
 	my $start=0;
