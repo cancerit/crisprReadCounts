@@ -72,22 +72,3 @@ if [ ! -e $SETUP_DIR/samtools.success ]; then
   touch $SETUP_DIR/samtools.success
 fi
 
-## Bio::DB::HTS (tar.gz)
-if [ ! -e $SETUP_DIR/Bio-DB-HTS.success ]; then
-  ## add perl deps
-  cpanm --no-wget --no-interactive --notest --mirror http://cpan.metacpan.org -l $INST_PATH Module::Build
-  cpanm --no-wget --no-interactive --notest --mirror http://cpan.metacpan.org -l $INST_PATH XML::Parser
-  cpanm --no-wget --no-interactive --notest --mirror http://cpan.metacpan.org -l $INST_PATH Bio::Root::Version
-
-  curl -sSL --retry 10 https://github.com/Ensembl/Bio-DB-HTS/archive/${VER_BIODBHTS}.tar.gz > distro.tar.gz
-  rm -rf distro/*
-  tar --strip-components 1 -C distro -zxf distro.tar.gz
-  cd distro
-  perl Build.PL --install_base=$INST_PATH --htslib=$INST_PATH
-  ./Build
-  ./Build test
-  ./Build install
-  cd $SETUP_DIR
-  rm -rf distro.* distro/*
-  touch $SETUP_DIR/Bio-DB-HTS.success
-fi
