@@ -32,6 +32,7 @@ if ! ( perl -MExtUtils::MakeMaker -e 1 >/dev/null 2>&1); then
 fi
 
 cpanm --no-interactive --notest --mirror http://cpan.metacpan.org --notest -l $INST_PATH --installdeps .
+cpanm -v --no-interactive --mirror http://cpan.metacpan.org -l $INST_PATH .
 
 echo "Installing crisprReadCounts (perl)..."
 
