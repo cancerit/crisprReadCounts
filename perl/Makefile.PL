@@ -32,12 +32,15 @@ WriteMakefile(
                         bin/crisprMergeResults.pl)],
 			
   PREREQ_PM     => {
-                     'Try::Tiny' => 0.24,
-		     'Const::Fast' => 0.014,
+                     'Const::Fast' => 0.014,
                      'autodie' => 2.29,
-		     'Pod::Usage' => 1.64,
-		     'Getopt::Long' => 2.45,
-		     'IPC::System::Simple' => 1.25
+                     'Pod::Usage' => 1.64,
+                     'Getopt::Long' => 2.45
                    }
+		   
+  TEST_REQUIRES  => {
+                    'Try::Tiny' => 0.30,
+                    'IPC::System::Simple' => 1.25
+                    }
 );
 

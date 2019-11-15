@@ -248,16 +248,16 @@ crisprReadCounts.pl [-h] -i /your/input/file.cram -l /your/library/file -p /plas
 
   General Options:
 
-	--help      (-h)	Brief documentation
+        --help      (-h)	Brief documentation
 	
-	--dir       (-i)	Input sample cram file
+        --dir       (-i)	Input sample cram file
 
         --plas      (-p)	Plasmid count tsv file
 	
-	--library   (-l)	Library csv file
+        --library   (-l)	Library csv file
 	
-	--output    (-o)	output file for read counts
+        --output    (-o)	output file for read counts
 	
-	--ref       (-r)        genome reference fa file
+        --ref       (-r)        genome reference fa file
 
 =cut

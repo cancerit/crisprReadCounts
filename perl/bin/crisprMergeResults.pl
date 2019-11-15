@@ -147,11 +147,11 @@ __END__
 
 =head1 NAME
 
-crisprReadCounts.pl - QC of CRISPR/CAS9 data
+crisprMergeResults.pl - merges CRISPR lane rc results.
 
 =head1 SYNOPSIS
 
-crisprReadCounts.pl [-h] -o /your/output/file -i file1,file2,file3,file4 -p y
+crisprMergeResults.pl [-h] -o /your/output/file -i file1,file2,file3,file4 -p y
 
   General Options:
 
