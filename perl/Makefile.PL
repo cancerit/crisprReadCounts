@@ -36,12 +36,8 @@ WriteMakefile(
                      'autodie' => 2.29,
                      'Pod::Usage' => 1.64,
                      'Getopt::Long' => 2.45
+                     'Try::Tiny' => 0.30,
+                     'IPC::System::Simple' => 1.25
                    }
-		   
-  TEST_REQUIRES  => {
-                    'Try::Tiny' => 0.30,
-		    'autodie' => 2.29,
-                    'IPC::System::Simple' => 1.25
-                    }
-);
+
 
