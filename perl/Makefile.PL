@@ -40,6 +40,7 @@ WriteMakefile(
 		   
   TEST_REQUIRES  => {
                     'Try::Tiny' => 0.30,
+		    'autodie' => 2.29,
                     'IPC::System::Simple' => 1.25
                     }
 );
