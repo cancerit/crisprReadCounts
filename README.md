@@ -7,7 +7,7 @@ Gets CRISPR read counts from cram files and merges readcounts from multiple read
 
 | Master | Dev |
 |---|---|
-|  [![Build Status](https://travis-ci.org/cancerit/crisprReadCounts.svg?branch=master)](https://travis-ci.org/cancerit/crisprReadCounts) | [![Build Status](https://travis-ci.org/cancerit/crisprReadCounts.svg?branch=dev)](https://travis-ci.org/cancerit/crisprReadCounts) |
+|  [![Build Status](https://travis-ci.org/cancerit/crisprReadCounts.svg?branch=master)](https://travis-ci.org/cancerit/crisprReadCounts) | [![Build Status](https://travis-ci.org/cancerit/crisprReadCounts.svg?branch=develop)](https://travis-ci.org/cancerit/crisprReadCounts) |
 
 ### Dependencies/Install
 
