@@ -56,6 +56,7 @@ LABEL maintainer="cgphelp@sanger.ac.uk"\
 RUN apt-get -yq update
 RUN apt-get install -yq --no-install-recommends \
 locales \
+libperlio-gzip-perl \
 curl \
 ca-certificates \
 bzip2 \
