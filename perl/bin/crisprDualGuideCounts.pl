@@ -62,12 +62,6 @@ if ($version) {
 
 die ( "\n$usage\n\n") if ($help);
 
-#unless($help || $version){
- # die "Cannot find library file: $library_file\n" unless ( -e $library_file );
-  #die "Cannot find fastq 1 file: $fastq1\n" unless ( -e $fastq1 );
-  #die "Cannot find fastq 2 file: $fastq2\n" unless ( -e $fastq2 );
-#}
-
 open(LIB,"< $library_file") or die (  "Error processing $library_file\n");
 my $header = <LIB>;
 chomp($header);
