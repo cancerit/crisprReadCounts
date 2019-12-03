@@ -25,7 +25,8 @@ Please use `setup.sh` to install minor dependancies (perl libraries).
 	crisprReadCounts.pl [-h] -i /your/input/file.cram -l /your/library/file -p /plasmid/readcount/file -o output_file
 
 	crisprMergeResults.pl [-h] -o /your/output/file -i file1,file2,file3,file4 -p y
-
+	
+	crisprDualGuideCounts.pl [--help] --sample sample_name --library library_file --fastq1 R1_fastq --fastq2 R2_fastq --reads reads.tsv --stats stats.tsv --counts counts.tsv
 
 
 ## Options

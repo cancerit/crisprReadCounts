@@ -29,7 +29,8 @@ WriteMakefile(
   LICENSE       => 'agpl_3', # http://search.cpan.org/~dagolden/CPAN-Meta-2.142690/lib/CPAN/Meta/Spec.pm#license
   VERSION_FROM  => 'lib/Sanger/CGP/crispr.pm',
   EXE_FILES     => [qw( bin/crisprReadCounts.pl
-                        bin/crisprMergeResults.pl)],
+                        bin/crisprMergeResults.pl
+                        bin/crisprDualGuideCounts.pl)],
 			
   PREREQ_PM     => {
                      'Const::Fast' => 0.014,
