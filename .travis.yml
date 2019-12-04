@@ -15,3 +15,4 @@ script:
  # verify the perl script installation
  - docker run -t --rm crisprreadcounts crisprReadCounts.pl --version
  - docker run -t --rm crisprreadcounts crisprMergeResults.pl --version
+ - docker run -t --rm crisprreadcounts crisprDualGuideCounts.pl --version
