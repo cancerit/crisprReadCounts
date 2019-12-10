@@ -70,7 +70,7 @@ sub run {
 	if($plas_name){
 		print $OUT "sgRNA\tgene\t".$samp_name.".sample\t".$plas_name."\n";
 
-		foreach my $seq(keys %lib){
+		foreach my $seq(sort keys %lib){
 			foreach my $grna (@{$lib{$seq}}) {
 				my $sample_count = $sample{$grna} || 0;
 				my $plasmid_count = $plasmid_rc{$grna} || 0;
@@ -80,7 +80,7 @@ sub run {
 	}else{
 		print $OUT "sgRNA\tgene\t".$samp_name.".sample\n";
 
-		foreach my $seq(keys %lib){
+		foreach my $seq(sort keys %lib){
 			foreach my $grna (@{$lib{$seq}}) {
 				my $sample_count = $sample{$grna} || 0;
   				print  $OUT "$grna\t$genes{$grna}\t$sample_count\n";
