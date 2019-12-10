@@ -182,7 +182,7 @@ sub get_counts {
 		my @data = split /\t/, $tmp;
 		my $cram_seq = $data[9];
 		my $cram_seq_size = length($cram_seq);
-	 
+
 		if($data[1] % 32 >= 16){
 			my $revcomp = reverse($cram_seq);
 			$revcomp =~ tr/ACGTacgt/TGCAtgca/;
@@ -248,16 +248,18 @@ crisprReadCounts.pl [-h] -i /your/input/file.cram -l /your/library/file -p /plas
 
   General Options:
 
-        --help      (-h)	Brief documentation
-	
-        --dir       (-i)	Input sample cram file
+    --help      (-h)  Brief documentation
 
-        --plas      (-p)	Plasmid count tsv file
-	
-        --library   (-l)	Library csv file
-	
-        --output    (-o)	output file for read counts
-	
-        --ref       (-r)        genome reference fa file
+    --dir       (-i)  Input sample cram file
+
+    --plas      (-p)  Plasmid count tsv file
+
+    --library   (-l)  Library csv file
+
+    --output    (-o)  output file for read counts
+
+    --ref       (-r)  genome reference fa file
+
+    --trim      (-t)  Remove N bases of leading sequence
 
 =cut
