@@ -50,7 +50,7 @@ FROM  ubuntu:16.04
 
 LABEL maintainer="cgphelp@sanger.ac.uk"\
       uk.ac.sanger.cgp="Cancer, Ageing and Somatic Mutation, Wellcome Sanger Institute" \
-      version="1.3.1" \
+      version="1.3.2" \
       description="crisprReadCounts"
 
 RUN apt-get -yq update
