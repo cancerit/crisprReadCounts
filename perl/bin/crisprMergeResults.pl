@@ -58,14 +58,14 @@ sub run {
 	if($has_plasmid && $has_plasmid ne 'NA'){
 		print $OUT "sgRNA\tgene\t".$samp_name."\t".$plas_name."\n";
 
-		foreach my $id(keys %sample_rc){
+		foreach my $id(sort keys %sample_rc){
 			my $rc_samp = $sample_rc{$id};
   			print  $OUT "$id\t$genes{$id}\t$rc_samp\t$plasmid_rc{$id}\n";
   		}
 	}else{
 		print $OUT "sgRNA\tgene\t".$samp_name."\n";
 
-		foreach my $id(keys %sample_rc){
+		foreach my $id(sort keys %sample_rc){
 			my $rc_samp = $sample_rc{$id};
   			print  $OUT "$id\t$genes{$id}\t$rc_samp\n";
   		}
@@ -155,14 +155,14 @@ crisprMergeResults.pl [-h] -o /your/output/file -i file1,file2,file3,file4 -p y
 
   General Options:
 
-    --help          (-h)	Brief documentation
+    --help       (-h)  Brief documentation
 
-    --input	    (-i)	Comma separated list of input files
+    --input      (-i)  Comma separated list of input files
 
-    --output	    (-o)	Output file
+    --output     (-o)  Output file
 
-    --output	    (-p)	Has plasmid counts (y)
+    --plasmid    (-p)  Has plasmid counts (y)
 
-    --version	    (-v)	Version
+    --version    (-v)  Version
 
 =cut
