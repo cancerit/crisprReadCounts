@@ -58,14 +58,14 @@ sub run {
 	if($has_plasmid && $has_plasmid ne 'NA'){
 		print $OUT "sgRNA\tgene\t".$samp_name."\t".$plas_name."\n";
 
-		foreach my $id(keys %sample_rc){
+		foreach my $id(sort keys %sample_rc){
 			my $rc_samp = $sample_rc{$id};
   			print  $OUT "$id\t$genes{$id}\t$rc_samp\t$plasmid_rc{$id}\n";
   		}
 	}else{
 		print $OUT "sgRNA\tgene\t".$samp_name."\n";
 
-		foreach my $id(keys %sample_rc){
+		foreach my $id(sort keys %sample_rc){
 			my $rc_samp = $sample_rc{$id};
   			print  $OUT "$id\t$genes{$id}\t$rc_samp\n";
   		}
