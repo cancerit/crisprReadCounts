@@ -61,7 +61,7 @@ sub run {
 	my %genes = %$targeted_genes;
     	my %plasmid_rc = %$plasmid if($plas_name);
 
-	my ($seen_samp, $samp_name) = get_counts($options->{'i'}, $options->{'r'},$lib_seqs, $targeted_genes, $trim, $lib_seq_size);
+	my ($seen_samp, $samp_name) = get_counts($options->{'i'}, $options->{'r'},$lib_seqs, $trim, $lib_seq_size);
 
 	my %sample = %$seen_samp;
 
@@ -149,13 +149,11 @@ sub get_plasmid_read_counts {
 }
 
 sub get_counts {
-  	my ($file, $ref_file, $lib, $genes, $trim, $lib_seq_size) = @_;
+  	my ($file, $ref_file, $lib, $trim, $lib_seq_size) = @_;
 
 	my %seen;
-	my %bam_seqs;
 	my $sample_name;
 	my %lib_seqs = %$lib;
-	my %targeted_genes = %$genes;
 
 	my $head_command = q{samtools view -H -T } .$ref_file . ' ' .$file . q{ | grep -e '^@RG'};
 	my $pid_head = open my $PROC_HEAD, '-|', $head_command or croak "Could not fork: $OS_ERROR";
@@ -172,21 +170,15 @@ sub get_counts {
 	my $command = 'samtools view -T '. $ref_file . ' ' .$file;
 	my $pid = open my $PROC, '-|', $command or croak "Could not fork: $OS_ERROR";
 
-	my $start=0;
-	my $stop=0;
-	my $length=0;
-	my $match_seq=0;
-
 	while( my $tmp = <$PROC> ) {
 		chomp($tmp);
 		my @data = split /\t/, $tmp;
 		my $cram_seq = $data[9];
 		my $cram_seq_size = length($cram_seq);
 
-		if($data[1] % 32 >= 16){
-			my $revcomp = reverse($cram_seq);
-			$revcomp =~ tr/ACGTacgt/TGCAtgca/;
-			$cram_seq = $revcomp;
+		if($data[1] & 16){
+			$cram_seq = reverse($cram_seq);
+			$cram_seq =~ tr/ACGTacgt/TGCAtgca/;
 		}
 
 		if($trim && $trim>0){
@@ -195,13 +187,9 @@ sub get_counts {
 
 		foreach my $grna (@{$lib_seqs{$cram_seq}}) {
 			$seen{$grna}++;
-			$match_seq++;
 		}
-
 	}
-
 	close $PROC;
-
 
 	return (\%seen, $sample_name);
 }
