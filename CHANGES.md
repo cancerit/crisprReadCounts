@@ -1,5 +1,9 @@
 # Changes
 
+## 1.3.3
+
+* Made plasmid file optional
+
 ## 1.3.2
 
 * Fixes #9, #10, #11, #12, #13
