@@ -219,7 +219,6 @@ sub option_builder {
 	pod2usage(1) if(!$opts{'o'});
 	pod2usage(1) if(!$opts{'r'});
 	pod2usage(q{(-i), (-l) and (-o) must be defined}) unless($opts{'i'}&&$opts{'l'}&&$opts{'o'});
-        pod2usage(q{(-p) must be defined}) unless($opts{'p'});
 
 	return \%opts;
 }
