@@ -54,9 +54,6 @@ sub run {
 
 	my ($plasmid, $plas_name) = get_plasmid_read_counts($options->{'p'});
 
-	# my %genes = %$targeted_genes;
-	# my %plasmid_rc = %$plasmid if($plas_name);
-
 	my ($seen_samp, $samp_name) = get_counts($options->{'i'}, $options->{'r'}, $lib, $trim, $reverse_complementing);
 
 	my %sample = %$seen_samp;
@@ -183,7 +180,6 @@ sub get_counts {
 			$seq_key =~ tr/ACGTacgt/TGCAtgca/;
 		}
 		$lib_seqs{$seq_key} = $seq;
-		# print "seq_key: $seq_key, seq: $seq\n";
 	}
 
 	# assume library sequences are in same length
@@ -197,7 +193,6 @@ sub get_counts {
 		my @data = split /\t/, $tmp;
 		my $cram_seq = $data[9];
 		my $cram_seq_size = length($cram_seq);
-		# print "cram_seq before trim: $cram_seq\n";
 
 		if($data[1] & 16){
 			$cram_seq = reverse($cram_seq);
@@ -210,7 +205,6 @@ sub get_counts {
 			$cram_seq = substr $cram_seq, $trim, $lib_seq_size;
 		}
 
-		# print "cram_seq: $cram_seq\n";
 		my $matching_lib_seq = $lib_seqs{$cram_seq};
 		if ($matching_lib_seq) {
 			foreach my $grna (@{$lib->{$matching_lib_seq}->{'ids'}}) {
@@ -282,5 +276,4 @@ crisprReadCounts.pl [-h] -i /your/input/file.cram -l /your/library/file -p /plas
     --trim                  (-t)   Remove N bases of leading sequence
 
     --reverse-complement    (-rc)  Reverse complementing reads when mapping to guide sequences 
-
 =cut
