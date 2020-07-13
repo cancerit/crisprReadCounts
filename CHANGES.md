@@ -1,5 +1,9 @@
 # Changes
 
+## Next
+
+* `crisprReadCounts.pl` not skips secondary, supplementary and vendor failed alignments in the input CRAM file.
+
 ## 1.3.3
 
 * Made plasmid file optional
