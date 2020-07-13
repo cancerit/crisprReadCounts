@@ -176,6 +176,11 @@ sub get_counts {
 		my $cram_seq = $data[9];
 		my $cram_seq_size = length($cram_seq);
 
+		# if the alignment is secondary, supplymentary or vendor failed, skip it!
+		if($data[1] & 2816){
+			next;
+		}
+
 		if($data[1] & 16){
 			$cram_seq = reverse($cram_seq);
 			$cram_seq =~ tr/ACGTacgt/TGCAtgca/;
