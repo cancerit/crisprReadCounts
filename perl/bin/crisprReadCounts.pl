@@ -280,5 +280,6 @@ crisprReadCounts.pl [-h] -i /your/input/file.cram -l /your/library/file -p /plas
 
     --trim                  (-t)   Remove N bases of leading sequence
 
-    --reverse-complement    (-rc)  Reverse complementing reads when mapping to guide sequences 
+    --reverse-complement    (-rc)  Reverse complementing reads when mapping to guide sequences (reads are reverse complemented prior to trimming)
+
 =cut
