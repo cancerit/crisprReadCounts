@@ -232,14 +232,11 @@ while(my $r1 = <FQ1>)
 close(CLR);
 my $read_counts = $nline / 4;
 
-open(COUNTST,">$stats_file");
-print COUNTST "sample\ttotal_reads\tmiss\tmismatch\tgRNA1_hits\tgRNA2_hits\tsafe_safe\tgRNA1_safe\tsafe_gRNA2\tgRNA1_gRNA2\n";
-print COUNTST "$sample_name\t$read_counts\t$n_miss_miss\t$n_incorrect_pair\t$n_grna1\t$n_grna2\t$n_safe_safe\t$n_grna1_safe\t$n_safe_grna2\t$n_grna1_grna2 \n";
-
 
 open(LIB,"< $library_file") or die (  "Error processing $library_file\n");
 <LIB>;
 
+my ($total_guides, $zero_guide, $less_30_guides)= (0,0,0);
 open(COUNT,">$counts_file");
 print COUNT "unique_id\ttarget_id\tgene_pair_id\t$sample_name\n";
 while( <LIB> )
@@ -254,9 +251,17 @@ while( <LIB> )
   my $sgSeqLrc = &rc( $sgSeqL);
   my $counts = $lookupGuidePair{ $sgSeqLrc . $sgSeqR };
   print COUNT "$unique_pair_id\t$target_pair_id\t$gene_pair_id\t$counts\n";
+  $total_guides += 1;
+  $zero_guides += 1 if ( $counts == 0);
+  $less_30_guides += 1 if ( $counts < 30 );
   }
 close(LIB);
 close(COUNT);
+
+open(COUNTST,">$stats_file");
+print COUNTST "sample\ttotal_reads\tmiss\tmismatch\tgRNA1_hits\tgRNA2_hits\tsafe_safe\tgRNA1_safe\tsafe_gRNA2\tgRNA1_gRNA2\ttotal_guides\tzero_guides\tless_30_guides\n";
+print COUNTST "$sample_name\t$read_counts\t$n_miss_miss\t$n_incorrect_pair\t$n_grna1\t$n_grna2\t$n_safe_safe\t$n_grna1_safe\t$n_safe_grna2\t$n_grna1_grna2\t$total_guides\t$zero_guide\t$less_30_guides\n";
+close(COUNTST);
 
 #reverse complement function
 sub rc
