@@ -1,3 +1,8 @@
+
+### This repo has migrated to [crisprReadCountsPy](https://github.com/cancerit/crisprReadCountspy).
+
+---
+
 crisprReadCounts
 =====
 
