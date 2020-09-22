@@ -1,8 +1,9 @@
 # Changes
 
-## Next
+## 1.4.0
 
-* `crisprReadCounts.pl` not skips secondary, supplementary and vendor failed alignments in the input CRAM file.
+* `crisprReadCounts.pl` now skips secondary, supplementary and vendor failed alignments in the input CRAM file.
+* Added option `--reverse-complement`(`-rc`) to `crisprReadCounts.pl` to reverse complement input reads before counting. Reads are reverse complemented prior to trimming.
 
 ## 1.3.3
 
